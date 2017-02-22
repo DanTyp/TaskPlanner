@@ -47,7 +47,7 @@
                 <a href="{{ path('task_edit', { 'id': task.id }) }}">Edit</a>
             </li>
             <li>
-                <a href="{{ path('taskplanner_task_marktaskascompleted', { 'id': task.id }) }}">Mark as completed</a>
+                <a href="{{ path('taskplanner_task_changestatus', { 'id': task.id }) }}">Change status</a>
             </li>
             <li>
                 {{ form_start(delete_form) }}

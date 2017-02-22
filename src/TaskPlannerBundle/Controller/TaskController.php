@@ -164,14 +164,26 @@ class TaskController extends Controller {
     }
 
     /**
-     * @Route("/{id}/modifyStatus", requirements={"id"="\d+"})
+     * @Route("/{id}/changeStatus", requirements={"id"="\d+"})
      */
-    public function markTaskAsCompletedAction($id) {
+    public function changeStatusAction($id) {
 
         $tasksRepository = $this->getDoctrine()->getRepository("TaskPlannerBundle:Task");
         $taskToModify = $tasksRepository->find($id);
-
-        $taskToModify->markTaskAsCompleted($id);
+        
+        if($taskToModify != null) {
+            $status = $taskToModify->getStatus();
+            
+            if($status == 0){
+                $newStatus = 1;
+            } else {
+                $newStatus = 0;
+            }
+            
+            $em = $this->getDoctrine()->getManager();
+            $taskToModify->setStatus($newStatus);
+            $em->flush();
+        }
 
         return $this->redirectToRoute('task_index');
     }
