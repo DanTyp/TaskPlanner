@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{# {% form_theme form 'bootstrap_3_layout.html.twig' %} #}
+
+
+{% block body %}
+    <div class="col-md-4 col-md-offset-4", style="background-color: #ffc966; margin-top: 65px; margin-bottom: auto">
+        <h1>Task creation</h1>
+
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <input type="submit" value="Add Task" />
+        {{ form_end(form) }}
+
+        <ul>
+            <li>
+                <a href="{{ path('task_index') }}">Back to the list</a>
+            </li>
+        </ul>
+    <div>
+        {% endblock %}
+

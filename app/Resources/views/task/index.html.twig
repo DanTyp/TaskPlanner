@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Tasks list</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Deadline</th>
+                <th>Priority</th>
+                <th>Attach</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for task in tasks %}
+            <tr>
+                <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td>
+                <td>{{ task.name }}</td>
+                <td>{{ task.description }}</td>
+                <td>{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if task.deadline %}{{ task.deadline|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ task.priority }}</td>
+                <td>{{ task.attach }}</td>
+                <td>{{ task.category.name }}</td>
+                <td>
+                    {# <ul> #}
+                       {# <li> #}
+                            <a href="{{ path('task_show', { 'id': task.id }) }}" class="btn btn-large btn-success">show</a>
+                       {# </li> #}
+                       {# <li> #}
+                            <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">edit</a>
+                       {# </li> #}
+                   {# </ul> #}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        {#<li> #}
+            <a href="{{ path('task_new') }}" class="btn btn-large btn-warning">Create a new task</a>
+        {#</li> #}
+    </ul>
+{% endblock %}
