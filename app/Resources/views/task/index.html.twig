@@ -6,46 +6,69 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+                {# <th>Id</th> #}
                 <th>Name</th>
                 <th>Description</th>
                 <th>Date</th>
                 <th>Deadline</th>
                 <th>Priority</th>
-                <th>Attach</th>
+                <th>Attachement</th>
                 <th>Category</th>
+                <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for task in tasks %}
-            <tr>
-                <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td>
-                <td>{{ task.name }}</td>
-                <td>{{ task.description }}</td>
-                <td>{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if task.deadline %}{{ task.deadline|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ task.priority }}</td>
-                <td>{{ task.attach }}</td>
-                <td>{{ task.category.name }}</td>
-                <td>
-                    {# <ul> #}
-                       {# <li> #}
-                            <a href="{{ path('task_show', { 'id': task.id }) }}" class="btn btn-large btn-success">show</a>
-                       {# </li> #}
-                       {# <li> #}
-                            <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">edit</a>
-                       {# </li> #}
-                   {# </ul> #}
-                </td>
-            </tr>
-        {% endfor %}
+            {% for task in tasks %}
+                <tr>
+                    {# <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td> #}
+                    <td>{{ task.name }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{% if task.deadline %}{{ task.deadline|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    {# <td>{{ task.priority }}</td> #}
+                    <td>
+                        {% if task.priority == 1 %}
+                            High
+                        {% elseif task.priority == 2 %}
+                            Medium
+                        {% else %}
+                            Low
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if task.attach is not null%}
+                            {{ task.attach }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>{{ task.category.name }}</td>
+                    <td>
+                        {% if task.status == 0 %}
+                            <label style="color: #d62929">Incomplete</label>
+                        {% else %}
+                            <label style="color: #5c7b1e">Completed</label>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {# <ul> #}
+                        {# <li> #}
+                        <a href="{{ path('task_show', { 'id': task.id }) }}" class="btn btn-large btn-success">show</a>
+                        {# </li> #}
+                        {# <li> #}
+                        <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">edit</a>
+                        {# </li> #}
+                        {# </ul> #}
+                    </td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 
     <ul>
         {#<li> #}
-            <a href="{{ path('task_new') }}" class="btn btn-large btn-warning">Create a new task</a>
+        <a href="{{ path('task_new') }}" class="btn btn-large btn-warning">Create a new task</a>
         {#</li> #}
     </ul>
 {% endblock %}

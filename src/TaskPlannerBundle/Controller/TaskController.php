@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 //use Symfony\Component\Form\Extension\Core\Type\FileType; //niepotrzebne
 //use Symfony\Component\Form\Extension\Core\Type\DateType; //niepotrzebne
 //use Symfony\Component\Validator\Constraints\DateTime; //niepotrzebne
-
 use TaskPlannerBundle\Entity\User;
 
 /**
@@ -27,9 +26,24 @@ class TaskController extends Controller {
      * @Method("GET")
      */
     public function indexAction() {
+        
         $em = $this->getDoctrine()->getManager();
 
-        $tasks = $em->getRepository('TaskPlannerBundle:Task')->findAll();
+        //$tasks = $em->getRepository('TaskPlannerBundle:Task')->findAll();
+
+        $user = $this->container
+                ->get('security.context')
+                ->getToken()
+                ->getUser();
+        
+        if ($user instanceof User) {
+
+            $tasks = $em->getRepository('TaskPlannerBundle:Task')->getPersonalTasks($user->getId());
+            
+        } else {
+
+            $tasks = [];
+        }
 
         return $this->render('task/index.html.twig', array(
                     'tasks' => $tasks,
@@ -54,16 +68,16 @@ class TaskController extends Controller {
 
         if ($form->isSubmitted() && $form->isValid() && $user instanceof User) {
             $em = $this->getDoctrine()->getManager();
-            
+
             $task->setUser($user); //dodać dodawanie daty
-            
+
             $date = new \DateTime();
             $status = 0;
-            
+
             $task->setDate($date);
             $task->setStatus($status);
-            
-            
+
+
             $em->persist($task);
             $em->flush($task);
 
@@ -147,6 +161,19 @@ class TaskController extends Controller {
                         ->setMethod('DELETE')
                         ->getForm()
         ;
+    }
+
+    /**
+     * @Route("/{id}/modifyStatus", requirements={"id"="\d+"})
+     */
+    public function markTaskAsCompletedAction($id) {
+
+        $tasksRepository = $this->getDoctrine()->getRepository("TaskPlannerBundle:Task");
+        $taskToModify = $tasksRepository->find($id);
+
+        $taskToModify->markTaskAsCompleted($id);
+
+        return $this->redirectToRoute('task_index');
     }
 
 }

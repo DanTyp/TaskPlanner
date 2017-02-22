@@ -12,11 +12,22 @@ use Doctrine\ORM\EntityRepository;
  */
 class TaskRepository extends EntityRepository {
 
-    public function getTasksByCategory($id) {
+    public function getPersonalTasks($id) {
         $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT p FROM TaskPlannerBundle:Person p WHERE p.user = :id ORDER BY p.name');
+        $query = $em->createQuery('SELECT t FROM TaskPlannerBundle:Task t WHERE t.user = :id');
         $query->setParameter('id', $id);
         return $query->getResult();
+    }
+    
+    //napisać funkcję do oznaczania zadan jako zakończone
+    
+    public function markTaskAsCompleted($id) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('UPDATE TaskPlannerBundle:Task t SET t.status = 1 WHERE t.id = :id');
+        $query->setParameter('id', $id);
+        return $query->execute();
+        
+        
     }
 
 }
