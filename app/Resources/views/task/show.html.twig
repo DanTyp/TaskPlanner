@@ -6,6 +6,10 @@
     <div class="col-md-4 col-md-offset-4">
         <h1>Task</h1>
 
+        {% if message is defined %}
+            <h3 style="color: #d62929">{{ message }} </h3>
+        {% endif %}
+
         <table class="table">
             <tbody>
                 <tr>

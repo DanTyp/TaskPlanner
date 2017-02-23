@@ -57,6 +57,11 @@
                         <a href="{{ path('task_show', { 'id': task.id }) }}" class="btn btn-large btn-success">show</a>
                         {# </li> #}
                         {# <li> #}
+                        {#
+                        {% if task.status == 0%}
+                        <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">edit</a>
+                        {% endif %}
+                        #}
                         <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">edit</a>
                         {# </li> #}
                         {# </ul> #}

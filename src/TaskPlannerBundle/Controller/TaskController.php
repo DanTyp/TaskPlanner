@@ -26,7 +26,7 @@ class TaskController extends Controller {
      * @Method("GET")
      */
     public function indexAction() {
-        
+
         $em = $this->getDoctrine()->getManager();
 
         //$tasks = $em->getRepository('TaskPlannerBundle:Task')->findAll();
@@ -35,11 +35,10 @@ class TaskController extends Controller {
                 ->get('security.context')
                 ->getToken()
                 ->getUser();
-        
+
         if ($user instanceof User) {
 
             $tasks = $em->getRepository('TaskPlannerBundle:Task')->getPersonalTasks($user->getId());
-            
         } else {
 
             $tasks = [];
@@ -111,23 +110,60 @@ class TaskController extends Controller {
      * @Route("/{id}/edit", name="task_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, Task $task) {
-        $deleteForm = $this->createDeleteForm($task);
-        $editForm = $this->createForm('TaskPlannerBundle\Form\TaskType', $task);
-        $editForm->handleRequest($request);
+    public function editAction(Request $request, Task $task, $id) {
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+        $tasksRepository = $this->getDoctrine()->getRepository("TaskPlannerBundle:Task");
+        $taskToEdit = $tasksRepository->find($id);
 
-            return $this->redirectToRoute('task_edit', array('id' => $task->getId()));
+        if ($taskToEdit->getStatus() != 1) { //dodatkowe zabezpieczenie jeżeli task.status = 1 (completed) wówczas nie moge go edytować, przekieruje mnie do
+            //widoku danego zadania
+            $deleteForm = $this->createDeleteForm($task);
+            $editForm = $this->createForm('TaskPlannerBundle\Form\TaskType', $task);
+            $editForm->handleRequest($request);
+
+
+
+            if ($editForm->isSubmitted() && $editForm->isValid()) {
+                $this->getDoctrine()->getManager()->flush();
+
+                return $this->redirectToRoute('task_edit', array('id' => $task->getId()));
+            }
+
+            return $this->render('task/edit.html.twig', array(
+                        'task' => $task,
+                        'edit_form' => $editForm->createView(),
+                        'delete_form' => $deleteForm->createView(),
+            ));
+        } else {
+            //return $this->redirectToRoute('task_show', ['id' => $id]);
+            $deleteForm = $this->createDeleteForm($task);
+            
+            return $this->render('task/show.html.twig', array(
+                        'task' => $task,
+                        'delete_form' => $deleteForm->createView(),
+                        'message' => 'Impossible to edit completed task. Change task\'s status in order to edit.'
+            ));
         }
-
-        return $this->render('task/edit.html.twig', array(
-                    'task' => $task,
-                    'edit_form' => $editForm->createView(),
-                    'delete_form' => $deleteForm->createView(),
-        ));
     }
+
+//    PRZED ZMIANAMI:
+//        public function editAction(Request $request, Task $task) {
+//        $deleteForm = $this->createDeleteForm($task);
+//        $editForm = $this->createForm('TaskPlannerBundle\Form\TaskType', $task);
+//        $editForm->handleRequest($request);
+//
+//        if ($editForm->isSubmitted() && $editForm->isValid()) {
+//            $this->getDoctrine()->getManager()->flush();
+//
+//            return $this->redirectToRoute('task_edit', array('id' => $task->getId()));
+//        }
+//
+//        return $this->render('task/edit.html.twig', array(
+//                    'task' => $task,
+//                    'edit_form' => $editForm->createView(),
+//                    'delete_form' => $deleteForm->createView(),
+//        ));
+//    }
 
     /**
      * Deletes a task entity.
@@ -170,16 +206,16 @@ class TaskController extends Controller {
 
         $tasksRepository = $this->getDoctrine()->getRepository("TaskPlannerBundle:Task");
         $taskToModify = $tasksRepository->find($id);
-        
-        if($taskToModify != null) {
+
+        if ($taskToModify != null) {
             $status = $taskToModify->getStatus();
-            
-            if($status == 0){
+
+            if ($status == 0) {
                 $newStatus = 1;
             } else {
                 $newStatus = 0;
             }
-            
+
             $em = $this->getDoctrine()->getManager();
             $taskToModify->setStatus($newStatus);
             $em->flush();
