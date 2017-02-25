@@ -68,12 +68,14 @@ class CommentaryController extends Controller
             $em->persist($commentary);
             $em->flush($commentary);
 
-            return $this->redirectToRoute('commentary_show', array('id' => $commentary->getId()));
+            //return $this->redirectToRoute('commentary_show', array('id' => $commentary->getId()));
+            return $this->redirectToRoute('task_show', ['id' => $id]);
         }
 
         return $this->render('commentary/new.html.twig', array(
             'commentary' => $commentary,
             'form' => $form->createView(),
+            'taskId' => $id
         ));
     }
 

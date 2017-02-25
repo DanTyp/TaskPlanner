@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="col-md-4 col-md-offset-4">
-        <h1>Task</h1>
+        <h1>Task's details:</h1>
 
         {% if message is defined %}
             <h3 style="color: #d62929">{{ message }} </h3>
@@ -12,52 +12,85 @@
 
         <table class="table">
             <tbody>
-                <tr>
+                {#<tr>
                     <th>Id</th>
                     <td>{{ task.id }}</td>
+                </tr>#}
+                <tr>
+                    <th class="active">Name</th>
+                    <td class="warning">{{ task.name }}</td>
                 </tr>
                 <tr>
-                    <th>Name</th>
-                    <td>{{ task.name }}</td>
+                    <th class="active">Description</th>
+                    <td class="warning">{{ task.description }}</td>
                 </tr>
                 <tr>
-                    <th>Description</th>
-                    <td>{{ task.description }}</td>
+                    <th class="active">Date</th>
+                    <td class="warning">{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
                 </tr>
                 <tr>
-                    <th>Date</th>
-                    <td>{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <th class="active">Deadline</th>
+                    <td class="warning">{% if task.deadline %}{{ task.deadline|date('Y-m-d H:i:s') }}{% endif %}</td>
                 </tr>
                 <tr>
-                    <th>Deadline</th>
-                    <td>{% if task.deadline %}{{ task.deadline|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <th class="active">Priority</th>
+                    <td class="warning">
+                        {% if task.priority == 1 %}
+                            High
+                        {% elseif task.priority == 2 %}
+                            Medium
+                        {% else %}
+                            Low
+                        {% endif %}
+                    </td>
                 </tr>
                 <tr>
-                    <th>Priority</th>
-                    <td>{{ task.priority }}</td>
-                </tr>
-                <tr>
-                    <th>Attach</th>
-                    <td>{{ task.attach }}</td>
+                    <th class="active">Attach</th>
+                    <td class="warning">{{ task.attach }}</td>
                 </tr>
             </tbody>
         </table>
 
-        <ul>
-            <li>
-                <a href="{{ path('task_index') }}">Back to the list</a>
-            </li>
-            <li>
-                <a href="{{ path('task_edit', { 'id': task.id }) }}">Edit</a>
-            </li>
-            <li>
-                <a href="{{ path('taskplanner_task_changestatus', { 'id': task.id }) }}">Change status</a>
-            </li>
-            <li>
-                {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-                {{ form_end(delete_form) }}
-            </li>
-        </ul>
+
+        <a href="{{ path('task_index') }}" class="btn btn-large btn-success">Back to the list</a>
+
+        <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">Edit</a>
+
+        <a href="{{ path('taskplanner_task_changestatus', { 'id': task.id }) }}" class="btn btn-large btn-success">Change status</a>
+
+        <a href="{{ path('commentary_new', { 'id': task.id }) }}" class="btn btn-large btn-warning">Comment</a>
+
+        <label>
+            {{ form_start(delete_form) }}
+            <input type="submit" value="Delete" class="btn btn-large btn-danger">
+            {{ form_end(delete_form) }}
+        </label>
+
+
+
     </div>
+
+    <div class="col-md-6 col-md-offset-3">
+        <h1>Commentaries:</h1>
+        <table class="table">
+            {% if commentaries is not empty %}
+                   <p>Number of commentaries: {{ commentaries|length }}</p>
+                <tbody>
+                    <tr class="active">
+                        <th>Content</th>
+                        <th>Date</th>
+                    </tr>
+                    {% for commentary in commentaries %}
+                        <tr class="warning">
+                            <td> {{ commentary.text }}</td>
+                            <td> {{ commentary.date|date('Y-m-d H:i:s') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            {% else %}
+                There are no commentaries concerning this task.
+            {% endif %}
+        </table>
+    </div>
+
 {% endblock %}

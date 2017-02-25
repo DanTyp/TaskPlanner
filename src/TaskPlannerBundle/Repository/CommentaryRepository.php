@@ -12,4 +12,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class CommentaryRepository extends EntityRepository
 {
+        //napisać funkcję do oznaczania zadan jako zakończone
+    
+    public function findCommentariesByTaskId($id) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT c FROM TaskPlannerBundle:Commentary c WHERE c.task = :id ORDER BY c.date DESC');
+        $query->setParameter('id', $id);
+        return $query->getResult();
+    }
 }

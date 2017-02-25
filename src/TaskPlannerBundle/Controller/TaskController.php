@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 //use Symfony\Component\Form\Extension\Core\Type\DateType; //niepotrzebne
 //use Symfony\Component\Validator\Constraints\DateTime; //niepotrzebne
 use TaskPlannerBundle\Entity\User;
+//use TaskPlannerBundle\Entity\Commentary;
 
 /**
  * Task controller.
@@ -46,6 +47,7 @@ class TaskController extends Controller {
 
         return $this->render('task/index.html.twig', array(
                     'tasks' => $tasks,
+                    'user' => $user
         ));
     }
 
@@ -95,12 +97,16 @@ class TaskController extends Controller {
      * @Route("/{id}", name="task_show")
      * @Method("GET")
      */
-    public function showAction(Task $task) {
+    public function showAction(Task $task) { // można dodać atrybut $id a następnie...
         $deleteForm = $this->createDeleteForm($task);
+        
+        $commentariesRepository = $this->getDoctrine()->getRepository("TaskPlannerBundle:Commentary");
+        $commentariesToTask = $commentariesRepository->findCommentariesByTaskId($task->getId()); //...tutaj wstawić to $id, ale działa też bez tego
 
         return $this->render('task/show.html.twig', array(
                     'task' => $task,
                     'delete_form' => $deleteForm->createView(),
+                    'commentaries' => $commentariesToTask
         ));
     }
 
@@ -126,7 +132,8 @@ class TaskController extends Controller {
             if ($editForm->isSubmitted() && $editForm->isValid()) {
                 $this->getDoctrine()->getManager()->flush();
 
-                return $this->redirectToRoute('task_edit', array('id' => $task->getId()));
+                //return $this->redirectToRoute('task_edit', array('id' => $task->getId()));
+                return $this->redirectToRoute('task_show', array('id' => $task->getId()));
             }
 
             return $this->render('task/edit.html.twig', array(
@@ -137,7 +144,7 @@ class TaskController extends Controller {
         } else {
             //return $this->redirectToRoute('task_show', ['id' => $id]);
             $deleteForm = $this->createDeleteForm($task);
-            
+
             return $this->render('task/show.html.twig', array(
                         'task' => $task,
                         'delete_form' => $deleteForm->createView(),

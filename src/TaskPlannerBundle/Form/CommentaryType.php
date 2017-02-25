@@ -13,7 +13,7 @@ class CommentaryType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('text')    ;
+        $builder->add('text', 'textarea')    ;
     }
     
     /**

@@ -19,15 +19,6 @@ class TaskRepository extends EntityRepository {
         return $query->getResult();
     }
     
-    //napisać funkcję do oznaczania zadan jako zakończone
-    
-    public function markTaskAsCompleted($id) {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery('UPDATE TaskPlannerBundle:Task t SET t.status = 1 WHERE t.id = :id');
-        $query->setParameter('id', $id);
-        return $query->execute();
-        
-        
-    }
+
 
 }
