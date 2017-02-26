@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Wyszukiwanie</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body >
+      <p>
+        <input type="text" id="search">
+      </p>
+      <p>
+        <ul>
+          <li class="filterable">Marek</li>
+          <li class="filterable">Jarek</li>
+          <li class="filterable">Czarek</li>
+          <li class="filterable">Darek</li>
+          <li class="filterable">Daria</li>
+          <li class="filterable">Maria</li>
+          <li class="filterable">Anita</li>
+          <li class="filterable">Piotrek</li>
+          <li class="filterable">Joanna</li>
+          <li class="filterable">Hanna</li>
+          <li class="filterable">Anna</li>
+          <li class="filterable">Zuzanna</li>
+        </ul>
+      </p>
+      <script
+        src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+      <script>
+        $(document).on('keyup', '#search', function() {
+
+          var str = $(this).val().toLowerCase();
+          var elements = $('.filterable');
+
+          elements.map(function(index, element) {
+
+            var content = $(element).html();
+            // To jest mega słabe rozwiązanie, podane tylko jako przykład.
+            // W tym miejscu powinieneś chwycić się konkrentego elementu-dziecka
+            //   i przeszukiwać jego zawartość.
+            // Przeszukujesz tylko konkretny element-dziecko, ale ukrywasz bądź
+            //   pokazujesz całego rodzica (element)
+
+            if ( content.toLowerCase().indexOf(str) !== -1 ) {
+              $(element).slideDown();
+              //$(element).show();
+            } else {
+              $(element).slideUp();
+              //$(element).hide();
+            }
+          });
+        });
+      </script>
+    </body>
+</html>

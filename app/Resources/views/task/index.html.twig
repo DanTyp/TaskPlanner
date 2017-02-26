@@ -1,17 +1,21 @@
 {% extends 'base.html.twig' %}
 
+
+
+
 {% block body %}
 
     <div class='col-md-8 col-md-offset-2 text-center'>
         <h1><kbd>Welcome {{ user.username }} ! Manage your task's list below: </kbd></h1><br><br>
     </div>
-    
+
 
     <table class="table">
         <thead>
             <tr>
                 {# <th>Id</th> #}
                 <th>Name</th>
+
                 <th>Description</th>
                 <th>Date</th>
                 <th>Deadline</th>
@@ -23,14 +27,23 @@
             </tr>
         </thead>
         <tbody>
+            <tr>
+                <td>
+                    <p><input type="text" id="searchName"></p>
+                </td>
+                <td>
+                    <p><input type="text" id="searchDescription"></p>
+                </td>
+            </tr>
+
             {% for task in tasks %}
-                <tr>
+                
+                <tr class="rowToFind">
                     {# <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td> #}
                     <td>{{ task.name }}</td>
-                    <td>{{ task.description }}</td>
+                    <td id="description">{{ task.description }}</td>
                     <td>{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
                     <td>{% if task.deadline %}{{ task.deadline|date('Y-m-d H:i:s') }}{% endif %}</td>
-                    {# <td>{{ task.priority }}</td> #}
                     <td>
                         {% if task.priority == 1 %}
                             High
@@ -56,32 +69,30 @@
                         {% endif %}
                     </td>
                     <td>
-                        {# <ul> #}
-                        {# <li> #}
+
                         <a href="{{ path('task_show', { 'id': task.id }) }}" class="btn btn-large btn-success">Show</a>
-                        {# </li> #}
-                        {# <li> #}
                         {#
                         {% if task.status == 0%}
                         <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">edit</a>
                         {% endif %}
                         #}
-                        <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">Edit</a>
-                        
+                        <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">Edit</a> 
                         <a href="{{ path('task_delete', { 'id': task.id }) }}" class="btn btn-large btn-danger">Delete</a>
-                        {# </li> #}
-                        {# </ul> #}
+
                     </td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 
-    {#<ul>#}
-    {#<li> #}
-    <a href="{{ path('task_new') }}" class="btn btn-large btn-success">Create a new task</a>
-    <a href="{{ path('category_new') }}" class="btn btn-large btn-warning">Create a new category</a>
-    <a href="{{ path('fos_user_security_logout') }}" class="btn btn-large btn-danger">Logout</a>
-    {#</li> #}
-    {#</ul>#}
+        {% endfor %}
+
+
+    </tbody>
+</table>
+
+{#<ul>#}
+{#<li> #}
+<a href="{{ path('task_new') }}" class="btn btn-large btn-success">Create a new task</a>
+<a href="{{ path('category_new') }}" class="btn btn-large btn-warning">Create a new category</a>
+<a href="{{ path('fos_user_security_logout') }}" class="btn btn-large btn-danger">Logout</a>
+{#</li> #}
+{#</ul>#}
 {% endblock %}
