@@ -1,8 +1,6 @@
 {% extends 'base.html.twig' %}
 
 
-
-
 {% block body %}
 
     <div class='col-md-8 col-md-offset-2 text-center'>
@@ -29,10 +27,25 @@
         <tbody>
             <tr>
                 <td>
-                    <p><input type="text" id="searchName"></p>
+                    <p><input type="text" class="search" style="width: 100%"></p>
                 </td>
                 <td>
-                    <p><input type="text" id="searchDescription"></p>
+                    <p><input type="text" class="search" style="width: 100%"></p>
+                </td>
+                <td>
+                    <p><input type="text" class="search" style="width: 100%"></p>
+                </td>
+                <td>
+                    <p><input type="text" class="search" style="width: 100%"></p>
+                </td>
+                <td>
+                    <p><input type="text" class="search" style="width: 100%"></p>
+                </td>
+                <td>
+                    <p><input type="text" class="search" style="width: 100%"></p>
+                </td>
+                <td>
+                    <p><input type="text" class="search" style="width: 100%"></p>
                 </td>
             </tr>
 
@@ -41,7 +54,7 @@
                 <tr class="rowToFind">
                     {# <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td> #}
                     <td>{{ task.name }}</td>
-                    <td id="description">{{ task.description }}</td>
+                    <td>{{ task.description }}</td>
                     <td>{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
                     <td>{% if task.deadline %}{{ task.deadline|date('Y-m-d H:i:s') }}{% endif %}</td>
                     <td>

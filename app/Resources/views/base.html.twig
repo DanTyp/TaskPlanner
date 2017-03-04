@@ -40,7 +40,31 @@
 {% block javascripts %}
 
     <script>
-        $(document).on('keyup', '#searchName', function () {
+        $(document).on('keyup', '.search', function () {
+            
+            
+            var index = $(this).parent().parent().index(); //na poziomie <td> za pomocą funkcji index sprawdzam, którym jestem elementem
+            
+            var str = $(this).val().toLowerCase();
+
+            var elements = $('.rowToFind');
+
+            elements.map(function (i, element) {
+
+                //var content = $(element).html();
+                var content = $(element).children().eq(index).html(); //sprawdzam zawartość tego dziecka, nad którym mam okienko wyszukiwania
+
+                if (content.toLowerCase().indexOf(str) !== -1) {
+                    //$(element).slideDown();
+                    $(element).show();
+                } else {
+                    //$(element).slideUp();
+                    $(element).hide();
+                }
+            });
+        });
+
+{#        $(document).on('keyup', '#searchName', function () {
 
             var str = $(this).val().toLowerCase();
 
@@ -49,7 +73,7 @@
             elements.map(function (index, element) {
 
                 //var content = $(element).html();
-                var content = $(element).children(0).html(); //jeżeli usuniemy to children(0), wówczas będzie przeszykiwało wszystie pola wiersza,
+                var content = $(element).children().eq(0).html(); //jeżeli usuniemy to children(0), wówczas będzie przeszykiwało wszystie pola wiersza,
                 //a nie tylko pierwsze pole Name
 
                 if (content.toLowerCase().indexOf(str) !== -1) {
@@ -60,7 +84,7 @@
                     $(element).hide();
                 }
             });
-        });
+        });#}
 
     </script>
 
@@ -69,7 +93,7 @@
 
         // poniżej funkcja dla Description
 
-        $(document).on('keyup', '#searchDescription', function () {
+{#        $(document).on('keyup', '#searchDescription', function () {
 
             var str = $(this).val().toLowerCase();
 
@@ -77,8 +101,9 @@
 
             elements.map(function (index, element) {
 
-                //var content = $(element).html();
-                var content = $(element).children(1).html(); //dlaczego nie działa?
+                
+                var content = $(element).children().eq(1).html(); //dlaczego nie działa?
+                console.log(content);
 
                 if (content.toLowerCase().indexOf(str) !== -1) {
                     //$(element).slideDown();
@@ -88,7 +113,7 @@
                     $(element).hide();
                 }
             });
-        });
+        });#}
     </script>
 
 {% endblock %}

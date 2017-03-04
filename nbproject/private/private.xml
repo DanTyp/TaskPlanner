@@ -2,12 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/home/daniel/Workspace/TaskPlanner/app/Resources/views/category/new.html.twig</file>
-            <file>file:/home/daniel/Workspace/TaskPlanner/app/Resources/views/category/index.html.twig</file>
-            <file>file:/home/daniel/Workspace/TaskPlanner/app/Resources/views/commentary/new.html.twig</file>
-            <file>file:/home/daniel/Workspace/TaskPlanner/src/TaskPlannerBundle/Form/CategoryType.php</file>
-            <file>file:/home/daniel/Workspace/TaskPlanner/app/Resources/views/task/index.html.twig</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
