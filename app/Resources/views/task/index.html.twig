@@ -4,7 +4,12 @@
 {% block body %}
 
     <div class='col-md-8 col-md-offset-2 text-center'>
-        <h1><kbd>Welcome {{ user.username }} ! Manage your task's list below: </kbd></h1><br><br>
+        <h1><kbd>Welcome {{ user.username }} ! Manage your task's list below! </kbd></h1>
+        <h3>
+            <a href="{{ path('task_index') }}">All tasks</a> &nbsp
+            <a href="{{ path('taskplanner_task_tasksfortoday', { 'id': user.id }) }}">Tasks for today</a> &nbsp
+            <a href="{{ path('taskplanner_task_delayedtasksforconcreteuser', { 'id': user.id }) }}">Delayed tasks</a>
+        </h3>
     </div>
 
 
@@ -49,54 +54,61 @@
                 </td>
             </tr>
 
-            {% for task in tasks %}
-                
-                <tr class="rowToFind">
-                    {# <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td> #}
-                    {#('Y-m-d H:i:s')#}
-                    <td>{{ task.name }}</td>
-                    <td>{{ task.description }}</td>
-                    <td>{% if task.date %}{{ task.date|date('Y-m-d') }}{% endif %}</td>
-                    <td>{% if task.deadline %}{{ task.deadline|date('Y-m-d') }}{% endif %}</td>
-                    <td>
-                        {% if task.priority == 1 %}
-                            High
-                        {% elseif task.priority == 2 %}
-                            Medium
-                        {% else %}
-                            Low
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if task.attach is not null%}
-                            {{ task.attach }}
-                        {% else %}
-                            N/A
-                        {% endif %}
-                    </td>
-                    <td>{{ task.category.name }}</td>
-                    <td>
-                        {% if task.status == 0 %}
-                            <label style="color: #d62929">Incomplete</label>
-                        {% else %}
-                            <label style="color: #5c7b1e">Completed</label>
-                        {% endif %}
-                    </td>
-                    <td>
+            {#{% if tasks in not null %}#}
 
-                        <a href="{{ path('task_show', { 'id': task.id }) }}" class="btn btn-large btn-success">Show</a>
-                        {#
-                        {% if task.status == 0%}
-                        <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">edit</a>
-                        {% endif %}
-                        #}
-                        <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">Edit</a> 
-                        <a href="{{ path('task_delete', { 'id': task.id }) }}" class="btn btn-large btn-danger">Delete</a>
+                {% for task in tasks %}
 
-                    </td>
-                </tr>
+                    <tr class="rowToFind">
+                        {# <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td> #}
+                        {#('Y-m-d H:i:s')#}
+                        <td>{{ task.name }}</td>
+                        <td>{{ task.description }}</td>
+                        <td>{% if task.date %}{{ task.date|date('Y-m-d') }}{% endif %}</td>
+                        <td>{% if task.deadline %}{{ task.deadline|date('Y-m-d') }}{% endif %}</td>
+                        <td>
+                            {% if task.priority == 1 %}
+                                High
+                            {% elseif task.priority == 2 %}
+                                Medium
+                            {% else %}
+                                Low
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if task.attach is not null%}
+                                
+                                
+                                <a href="/uploads/{{ task.attach }}">Download</a>
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td>{{ task.category.name }}</td>
+                        <td>
+                            {% if task.status == 0 %}
+                                <label style="color: #d62929">Incomplete</label>
+                            {% else %}
+                                <label style="color: #5c7b1e">Completed</label>
+                            {% endif %}
+                        </td>
+                        <td>
 
-        {% endfor %}
+                            <a href="{{ path('task_show', { 'id': task.id }) }}" class="btn btn-xs btn-success">Show</a>
+                            {#
+                            {% if task.status == 0%}
+                            <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">edit</a>
+                            {% endif %}
+                            #}
+                            <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-xs btn-success">Edit</a> 
+                            <a href="{{ path('task_delete', { 'id': task.id }) }}" class="btn btn-xs btn-danger">Delete</a>
+
+                        </td>
+                    </tr>
+
+                {% endfor %}
+{#            {% else %}
+            <h3>There are no tasks in database which meet search criteria</h3>
+        {% endif %}#}
 
 
     </tbody>

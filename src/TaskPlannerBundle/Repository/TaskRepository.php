@@ -25,11 +25,19 @@ class TaskRepository extends EntityRepository {
         $query->setParameter('id', $id);
         return $query->getResult();
     }
+    
 
     public function getDelayedTasks() {
         $em = $this->getEntityManager();
         $query = $em->createQuery('SELECT t FROM TaskPlannerBundle:Task t WHERE t.deadline < CURRENT_DATE()');
         //$query->setParameter('id', $id);
+        return $query->getResult();
+    }
+    
+    public function getDelayedTasksForConcreteUser($id) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT t FROM TaskPlannerBundle:Task t WHERE t.user = :id AND t.deadline < CURRENT_DATE()');
+        $query->setParameter('id', $id);
         return $query->getResult();
     }
 

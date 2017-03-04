@@ -59,7 +59,7 @@ class TaskController extends Controller {
         if ($user instanceof User) {
 
             $tasks = $em->getRepository('TaskPlannerBundle:Task')->getPersonalTasks($user->getId());
-            $tasksForToday = $em->getRepository('TaskPlannerBundle:Task')->getTasksForToday($user->getId());
+            //$tasksForToday = $em->getRepository('TaskPlannerBundle:Task')->getTasksForToday($user->getId());
         } else {
 
             $tasks = [];
@@ -68,7 +68,7 @@ class TaskController extends Controller {
         return $this->render('task/index.html.twig', array(
                     'tasks' => $tasks,
                     'user' => $user,
-                    'tasksForToday' => $tasksForToday
+                        //'tasksForToday' => $tasksForToday
         ));
     }
 
@@ -95,6 +95,15 @@ class TaskController extends Controller {
 
             $date = new \DateTime();
             $status = 0;
+
+            $file = $task->getAttach(); //pobieram z formularza plik
+            
+            $fileName = $user->getId().'_'.mt_rand(1, 9999).date('Y-m-d').".".$file->guessExtension(); //podaję jego nazwę
+
+            $file->move($this->getParameter('uploadsDirection'), $fileName); //podaję gdzie zapisać plik. parametr 'uploadsDirection' to ten, który ustawiłem sobie 
+
+
+            $task->setAttach($fileName); //przypisuje załącznik do zadania
 
             $task->setDate($date);
             $task->setStatus($status);
@@ -263,6 +272,66 @@ class TaskController extends Controller {
         }
 
         return $this->redirectToRoute('task_index');
+    }
+
+    /**
+     * @Route("/{id}/tasksForToday", requirements={"id"="\d+"})
+     */
+    public function tasksForTodayAction($id) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$tasks = $em->getRepository('TaskPlannerBundle:Task')->findAll();
+
+        $user = $this->container
+                ->get('security.context')
+                ->getToken()
+                ->getUser();
+
+        if ($user instanceof User) {
+
+            //$tasks = $em->getRepository('TaskPlannerBundle:Task')->getPersonalTasks($user->getId());
+            $tasksForToday = $em->getRepository('TaskPlannerBundle:Task')->getTasksForToday($user->getId());
+        } else {
+
+            $tasks = [];
+        }
+
+        return $this->render('task/index.html.twig', array(
+                    'tasks' => $tasksForToday,
+                    'user' => $user,
+                        //'tasksForToday' => $tasksForToday
+        ));
+    }
+
+    /**
+     * @Route("/{id}/myDelayedTasks", requirements={"id"="\d+"})
+     */
+    public function delayedTasksForConcreteUserAction($id) {
+
+        $em = $this->getDoctrine()->getManager();
+
+
+
+        $user = $this->container
+                ->get('security.context')
+                ->getToken()
+                ->getUser();
+
+        if ($user instanceof User) {
+
+            //$tasks = $em->getRepository('TaskPlannerBundle:Task')->getPersonalTasks($user->getId());
+            $delayedTasks = $em->getRepository('TaskPlannerBundle:Task')->getDelayedTasksForConcreteUser($user->getId());
+        } else {
+
+            $tasks = [];
+        }
+
+        return $this->render('task/index.html.twig', array(
+                    'tasks' => $delayedTasks,
+                    'user' => $user,
+                        //'tasksForToday' => $tasksForToday
+        ));
     }
 
 }

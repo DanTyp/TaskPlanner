@@ -35,6 +35,9 @@ class EmailsCommand extends ContainerAwareCommand {
                     ->setBody("Hello $username! You have delayed task: $taskName - $taskDescription. Deadline was $deadline.");
 
             $this->getContainer()->get('mailer')->send($message); //getContainer()->dobieram sie do worka z usługami
+            
+            //./app/console TaskPlanner:sendReminder -> wysyłanie maili przez konsolę
+
         }
     }
 
