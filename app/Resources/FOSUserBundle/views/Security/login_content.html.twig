@@ -14,7 +14,7 @@
         {% endif %}
 
         <h3>Login form:</h3>
-        
+
         <div class="form-group">
             {#<label for="username">{{ 'security.login.username'|trans }}</label>#}
             {#<label for="username">{{ 'Username'|trans }}</label>#}
@@ -31,15 +31,18 @@
         {#<div class="checkbox">#}
         <div class="form-group text-center">
             {#<input type="checkbox" id="remember_me" name="_remember_me" value="on" />#}
-            
+
             <input type="checkbox" id="remember_me" name="_remember_me" value="on"/>
             <label for="remember_me">{{ 'Remember me'|trans }}</label>
         </div>
 
-        
+
         <input type="submit" id="_submit" name="_submit" value="{{ 'Log in'|trans }} " class="btn btn-large btn-success btn-block" />
-        
+
         <a href="{{ path('fos_user_registration_register') }}" class="btn btn-large btn-primary btn-block">For new account go to registration page</a>
+        <div class="form-group text-center">
+            <a href="{{ path('fos_user_resetting_request') }}">Forgot your password?</a>
+        </div>
     </form>
 </div>
 

@@ -98,7 +98,7 @@ class TaskController extends Controller {
 
             $file = $task->getAttach(); //pobieram z formularza plik
             
-            $fileName = $user->getId().'_'.mt_rand(1, 9999).date('Y-m-d').".".$file->guessExtension(); //podaję jego nazwę
+            $fileName = $user->getId().'_'.mt_rand(1, 9999).'_'.date('Y-m-d').".".$file->guessExtension(); //podaję jego nazwę
 
             $file->move($this->getParameter('uploadsDirection'), $fileName); //podaję gdzie zapisać plik. parametr 'uploadsDirection' to ten, który ustawiłem sobie 
 

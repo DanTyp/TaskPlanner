@@ -63,9 +63,9 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: gmail
-    username:  coderslabworkshop@gmail.com
-    password:  CodersLab
+    transport: "%mailer_transport%"
+    username:  "%mailer_user%"
+    password: "%mailer_password%"
     spool:     { type: memory }
     
 fos_user:

@@ -26,7 +26,7 @@
                 <th>Attachement</th>
                 <th>Category</th>
                 <th>Status</th>
-                <th>Actions</th>
+                <th style="width: 225px">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -93,14 +93,14 @@
                         </td>
                         <td>
 
-                            <a href="{{ path('task_show', { 'id': task.id }) }}" class="btn btn-xs btn-success">Show</a>
+                            <a href="{{ path('task_show', { 'id': task.id }) }}" class="btn btn-large btn-success">Show</a>
                             {#
                             {% if task.status == 0%}
                             <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">edit</a>
                             {% endif %}
                             #}
-                            <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-xs btn-success">Edit</a> 
-                            <a href="{{ path('task_delete', { 'id': task.id }) }}" class="btn btn-xs btn-danger">Delete</a>
+                            <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-large btn-success">Edit</a> 
+                            <a href="{{ path('task_delete', { 'id': task.id }) }}" class="btn btn-large btn-danger">Delete</a>
 
                         </td>
                     </tr>

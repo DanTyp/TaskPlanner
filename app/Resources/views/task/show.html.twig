@@ -46,7 +46,13 @@
                 </tr>
                 <tr>
                     <th class="active">Attach</th>
-                    <td class="warning">{{ task.attach }}</td>
+                    <td class="warning">
+                        {% if task.attach is not null%}
+                            <a href="/uploads/{{ task.attach }}">Download</a>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -74,7 +80,7 @@
         <h1>Commentaries:</h1>
         <table class="table">
             {% if commentaries is not empty %}
-                   <p>Number of commentaries: {{ commentaries|length }}</p>
+                <p>Number of commentaries: {{ commentaries|length }}</p>
                 <tbody>
                     <tr class="active">
                         <th>Content</th>
