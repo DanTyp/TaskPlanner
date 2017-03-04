@@ -26,11 +26,11 @@
                 </tr>
                 <tr>
                     <th class="active">Date</th>
-                    <td class="warning">{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td class="warning">{% if task.date %}{{ task.date|date('Y-m-d') }}{% endif %}</td>
                 </tr>
                 <tr>
                     <th class="active">Deadline</th>
-                    <td class="warning">{% if task.deadline %}{{ task.deadline|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td class="warning">{% if task.deadline %}{{ task.deadline|date('Y-m-d') }}{% endif %}</td>
                 </tr>
                 <tr>
                     <th class="active">Priority</th>

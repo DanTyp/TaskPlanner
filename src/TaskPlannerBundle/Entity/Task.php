@@ -38,14 +38,14 @@ class Task
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="date", type="date")
      */
     private $date;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="deadline", type="datetime")
+     * @ORM\Column(name="deadline", type="date")
      */
     private $deadline;
 

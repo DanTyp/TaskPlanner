@@ -17,7 +17,7 @@
             <tr>
                 <td><a href="{{ path('commentary_show', { 'id': commentary.id }) }}">{{ commentary.id }}</a></td>
                 <td>{{ commentary.text }}</td>
-                <td>{% if commentary.date %}{{ commentary.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if commentary.date %}{{ commentary.date|date('Y-m-d') }}{% endif %}</td>
                 <td>
                     <ul>
                         <li>

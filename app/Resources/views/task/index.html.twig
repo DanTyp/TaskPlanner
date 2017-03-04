@@ -53,10 +53,11 @@
                 
                 <tr class="rowToFind">
                     {# <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td> #}
+                    {#('Y-m-d H:i:s')#}
                     <td>{{ task.name }}</td>
                     <td>{{ task.description }}</td>
-                    <td>{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
-                    <td>{% if task.deadline %}{{ task.deadline|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{% if task.date %}{{ task.date|date('Y-m-d') }}{% endif %}</td>
+                    <td>{% if task.deadline %}{{ task.deadline|date('Y-m-d') }}{% endif %}</td>
                     <td>
                         {% if task.priority == 1 %}
                             High

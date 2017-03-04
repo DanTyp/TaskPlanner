@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 //use Symfony\Component\Form\Extension\Core\Type\DateType; //niepotrzebne
 //use Symfony\Component\Validator\Constraints\DateTime; //niepotrzebne
 use TaskPlannerBundle\Entity\User;
+
 //use TaskPlannerBundle\Entity\Commentary;
 
 /**
@@ -19,6 +20,24 @@ use TaskPlannerBundle\Entity\User;
  * @Route("task")
  */
 class TaskController extends Controller {
+
+    private function verifyAccess(Task $task) {
+
+        $tasksUser = $task->getUser();
+
+        $user = $this->container
+                ->get('security.context')
+                ->getToken()
+                ->getUser();
+
+        if ($user !== $tasksUser) {
+
+            throw $this->createAccessDeniedException();
+        }
+
+        //jeżeli są to 2 różne osoby to rzuci mi exception i wykonywanie akcji zostanie przerwane
+        //jeżeli to ta sama osoba to nic się nie zwróci i wywoła się dalsza część akcji
+    }
 
     /**
      * Lists all task entities.
@@ -40,6 +59,7 @@ class TaskController extends Controller {
         if ($user instanceof User) {
 
             $tasks = $em->getRepository('TaskPlannerBundle:Task')->getPersonalTasks($user->getId());
+            $tasksForToday = $em->getRepository('TaskPlannerBundle:Task')->getTasksForToday($user->getId());
         } else {
 
             $tasks = [];
@@ -47,7 +67,8 @@ class TaskController extends Controller {
 
         return $this->render('task/index.html.twig', array(
                     'tasks' => $tasks,
-                    'user' => $user
+                    'user' => $user,
+                    'tasksForToday' => $tasksForToday
         ));
     }
 
@@ -98,8 +119,10 @@ class TaskController extends Controller {
      * @Method("GET")
      */
     public function showAction(Task $task) { // można dodać atrybut $id a następnie...
+        $this->verifyAccess($task);
+
         $deleteForm = $this->createDeleteForm($task);
-        
+
         $commentariesRepository = $this->getDoctrine()->getRepository("TaskPlannerBundle:Commentary");
         $commentariesToTask = $commentariesRepository->findCommentariesByTaskId($task->getId()); //...tutaj wstawić to $id, ale działa też bez tego
 
@@ -120,6 +143,11 @@ class TaskController extends Controller {
 
         $tasksRepository = $this->getDoctrine()->getRepository("TaskPlannerBundle:Task");
         $taskToEdit = $tasksRepository->find($id);
+
+        $commentariesRepository = $this->getDoctrine()->getRepository("TaskPlannerBundle:Commentary");
+        $commentariesToTask = $commentariesRepository->findCommentariesByTaskId($taskToEdit->getId()); //...tutaj wstawić to $id, ale działa też bez tego
+
+        $this->verifyAccess($taskToEdit);
 
         if ($taskToEdit->getStatus() != 1) { //dodatkowe zabezpieczenie jeżeli task.status = 1 (completed) wówczas nie moge go edytować, przekieruje mnie do
             //widoku danego zadania
@@ -148,6 +176,7 @@ class TaskController extends Controller {
             return $this->render('task/show.html.twig', array(
                         'task' => $task,
                         'delete_form' => $deleteForm->createView(),
+                        'commentaries' => $commentariesToTask,
                         'message' => 'Impossible to edit completed task. Change task\'s status in order to edit.'
             ));
         }
@@ -179,6 +208,9 @@ class TaskController extends Controller {
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Task $task) {
+
+        $this->verifyAccess($task);
+
         $form = $this->createDeleteForm($task);
         $form->handleRequest($request);
 
@@ -213,6 +245,8 @@ class TaskController extends Controller {
 
         $tasksRepository = $this->getDoctrine()->getRepository("TaskPlannerBundle:Task");
         $taskToModify = $tasksRepository->find($id);
+
+        $this->verifyAccess($taskToModify);
 
         if ($taskToModify != null) {
             $status = $taskToModify->getStatus();
