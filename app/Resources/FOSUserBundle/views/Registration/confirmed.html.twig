@@ -3,8 +3,14 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block fos_user_content %}
-    <p>{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</p>
-    {% if targetUrl %}
-    <p><a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a></p>
-    {% endif %}
+
+    {#    <p>{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</p>
+        {% if targetUrl %}
+        <p><a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a></p>
+        {% endif %}#}
+
+    {#przekierowania w JavaScript tak aby nowo zarejestrowany użytkownik był przekierowywany do strony z taskami#}
+    <script>
+        window.location.href = "http://127.0.0.1:8000/task/";
+    </script>
 {% endblock fos_user_content %}

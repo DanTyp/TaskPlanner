@@ -79,14 +79,17 @@ class TaskController extends Controller {
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request) {
-        $task = new Task();
-        $form = $this->createForm('TaskPlannerBundle\Form\TaskType', $task);
-        $form->handleRequest($request);
 
         $user = $this->container
                 ->get('security.context')
                 ->getToken()
                 ->getUser();
+
+        $task = new Task();
+        $form = $this->createForm('TaskPlannerBundle\Form\TaskType', $task, ['attr' => ['userId' => $user->getId()]]); //po stronie 
+        $form->handleRequest($request);
+
+
 
         if ($form->isSubmitted() && $form->isValid() && $user instanceof User) {
             $em = $this->getDoctrine()->getManager();
@@ -97,8 +100,8 @@ class TaskController extends Controller {
             $status = 0;
 
             $file = $task->getAttach(); //pobieram z formularza plik
-            
-            $fileName = $user->getId().'_'.mt_rand(1, 9999).'_'.date('Y-m-d').".".$file->guessExtension(); //podaję jego nazwę
+
+            $fileName = $user->getId() . '_' . mt_rand(1, 9999) . '_' . date('Y-m-d') . "." . $file->guessExtension(); //podaję jego nazwę
 
             $file->move($this->getParameter('uploadsDirection'), $fileName); //podaję gdzie zapisać plik. parametr 'uploadsDirection' to ten, który ustawiłem sobie 
 
@@ -157,16 +160,38 @@ class TaskController extends Controller {
         $commentariesToTask = $commentariesRepository->findCommentariesByTaskId($taskToEdit->getId()); //...tutaj wstawić to $id, ale działa też bez tego
 
         $this->verifyAccess($taskToEdit);
+        $user = $task->getUser();
+
+        //$attachement = $task->getAttach();
 
         if ($taskToEdit->getStatus() != 1) { //dodatkowe zabezpieczenie jeżeli task.status = 1 (completed) wówczas nie moge go edytować, przekieruje mnie do
             //widoku danego zadania
             $deleteForm = $this->createDeleteForm($task);
-            $editForm = $this->createForm('TaskPlannerBundle\Form\TaskType', $task);
-            $editForm->handleRequest($request);
+            $editForm = $this->createForm('TaskPlannerBundle\Form\TaskType', $task, ['attr' => ['userId' => $user->getId()]]); //przekazuje id usera do formularza edycji zadania/taska w pliku TaskType.php;
+            //powyżej musiałem użyć ['attr' => ['userId' => $user->getId()]] ponieważ samo ['userId' => $user->getId()] wywalało błąd
+
+            $attachement = $task->getAttach();
+
+            $editForm->handleRequest($request); //w tym momencie wrzucane są dane z formularza i dlatego lepiej powyżej sprawdzić co było załącznikiem wcześniej
 
 
 
             if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+                if ($task->getAttach() != null) {
+
+                    $file = $task->getAttach(); //pobieram z formularza plik
+
+                    $fileName = $user->getId() . '_' . mt_rand(1, 9999) . '_' . date('Y-m-d') . "." . $file->guessExtension(); //podaję jego nazwę
+
+                    $file->move($this->getParameter('uploadsDirection'), $fileName); //podaję gdzie zapisać plik. parametr 'uploadsDirection' to ten, który ustawiłem sobie 
+
+
+                    $task->setAttach($fileName); //przypisuje załącznik do zadania
+                } else {
+                    $task->setAttach($attachement); //jeżeli nie wybrałem nowego załacznika, wówczas zapisuję stary, który był przed obsłużeniem handleRequesta
+                }
+
                 $this->getDoctrine()->getManager()->flush();
 
                 //return $this->redirectToRoute('task_edit', array('id' => $task->getId()));

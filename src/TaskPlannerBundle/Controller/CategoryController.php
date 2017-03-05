@@ -7,7 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-
 use TaskPlannerBundle\Entity\User;
 
 /**
@@ -15,22 +14,29 @@ use TaskPlannerBundle\Entity\User;
  *
  * @Route("category")
  */
-class CategoryController extends Controller
-{
+class CategoryController extends Controller {
+
     /**
      * Lists all category entities.
      *
      * @Route("/", name="category_index")
      * @Method("GET")
      */
-    public function indexAction()
-    {
+    public function indexAction() {
         $em = $this->getDoctrine()->getManager();
 
-        $categories = $em->getRepository('TaskPlannerBundle:Category')->findAll();
+        //$categories = $em->getRepository('TaskPlannerBundle:Category')->findAll();
+
+        $user = $this->container
+                ->get('security.context')
+                ->getToken()
+                ->getUser();
+        
+        $categories = $em->getRepository('TaskPlannerBundle:Category')->getUsersCategories($user->getId());
+
 
         return $this->render('category/index.html.twig', array(
-            'categories' => $categories,
+                    'categories' => $categories,
         ));
     }
 
@@ -40,12 +46,11 @@ class CategoryController extends Controller
      * @Route("/new", name="category_new")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $category = new Category();
         $form = $this->createForm('TaskPlannerBundle\Form\CategoryType', $category);
         $form->handleRequest($request);
-        
+
         $user = $this->container
                 ->get('security.context')
                 ->getToken()
@@ -53,9 +58,9 @@ class CategoryController extends Controller
 
         if ($form->isSubmitted() && $form->isValid() && $user instanceof User) {
             $em = $this->getDoctrine()->getManager();
-            
+
             $category->setUser($user);
-            
+
             $em->persist($category);
             $em->flush($category);
 
@@ -63,8 +68,8 @@ class CategoryController extends Controller
         }
 
         return $this->render('category/new.html.twig', array(
-            'category' => $category,
-            'form' => $form->createView(),
+                    'category' => $category,
+                    'form' => $form->createView(),
         ));
     }
 
@@ -74,13 +79,12 @@ class CategoryController extends Controller
      * @Route("/{id}", name="category_show")
      * @Method("GET")
      */
-    public function showAction(Category $category)
-    {
+    public function showAction(Category $category) {
         $deleteForm = $this->createDeleteForm($category);
 
         return $this->render('category/show.html.twig', array(
-            'category' => $category,
-            'delete_form' => $deleteForm->createView(),
+                    'category' => $category,
+                    'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -90,8 +94,13 @@ class CategoryController extends Controller
      * @Route("/{id}/edit", name="category_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, Category $category)
-    {
+    public function editAction(Request $request, Category $category) {
+        
+        $user = $this->container
+                ->get('security.context')
+                ->getToken()
+                ->getUser(); 
+        
         $deleteForm = $this->createDeleteForm($category);
         $editForm = $this->createForm('TaskPlannerBundle\Form\CategoryType', $category);
         $editForm->handleRequest($request);
@@ -103,9 +112,9 @@ class CategoryController extends Controller
         }
 
         return $this->render('category/edit.html.twig', array(
-            'category' => $category,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+                    'category' => $category,
+                    'edit_form' => $editForm->createView(),
+                    'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -115,8 +124,7 @@ class CategoryController extends Controller
      * @Route("/{id}", name="category_delete")
      * @Method("DELETE")
      */
-    public function deleteAction(Request $request, Category $category)
-    {
+    public function deleteAction(Request $request, Category $category) {
         $form = $this->createDeleteForm($category);
         $form->handleRequest($request);
 
@@ -136,12 +144,12 @@ class CategoryController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm(Category $category)
-    {
+    private function createDeleteForm(Category $category) {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('category_delete', array('id' => $category->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
+                        ->setAction($this->generateUrl('category_delete', array('id' => $category->getId())))
+                        ->setMethod('DELETE')
+                        ->getForm()
         ;
     }
+
 }
