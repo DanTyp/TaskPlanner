@@ -3,9 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/daniel/Workspace/TaskPlanner/app/Resources/FOSUserBundle/views/Resetting/request_content.html.twig</file>
-            <file>file:/home/daniel/Workspace/TaskPlanner/app/config/config.yml</file>
-            <file>file:/home/daniel/Workspace/TaskPlanner/app/Resources/views/email/password_resetting.html.twig</file>
+            <file>file:/home/daniel/Workspace/TaskPlanner/src/TaskPlannerBundle/Repository/TaskRepository.php</file>
+            <file>file:/home/daniel/Workspace/TaskPlanner/src/TaskPlannerBundle/Entity/Task.php</file>
+            <file>file:/home/daniel/Workspace/TaskPlanner/app/Resources/views/task/index.html.twig</file>
         </group>
     </open-files>
 </project-private>

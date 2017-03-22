@@ -98,18 +98,36 @@ class TaskController extends Controller {
 
             $date = new \DateTime();
             $status = 0;
-
-            $file = $task->getAttach(); //pobieram z formularza plik
-
-            $fileName = $user->getId() . '_' . mt_rand(1, 9999) . '_' . date('Y-m-d') . "." . $file->guessExtension(); //podaję jego nazwę
-
-            $file->move($this->getParameter('uploadsDirection'), $fileName); //podaję gdzie zapisać plik. parametr 'uploadsDirection' to ten, który ustawiłem sobie 
-
-
-            $task->setAttach($fileName); //przypisuje załącznik do zadania
-
             $task->setDate($date);
             $task->setStatus($status);
+
+            /* wcześniej wyskakiwał błąd
+
+              Error: Call to a member function guessExtension() on a non-object
+             * 
+              kiedy chciałem stworzyć nowe zadanie nie dodając załącznika, muszę stworzyć warunek
+             *              */
+
+            if ($task->getAttach() != null) {
+                $file = $task->getAttach(); //pobieram z formularza plik
+
+                $fileName = $user->getId() . '_' . mt_rand(1, 9999) . '_' . date('Y-m-d') . "." . $file->guessExtension(); //podaję jego nazwę
+
+                $file->move($this->getParameter('uploadsDirection'), $fileName); //podaję gdzie zapisać plik. parametr 'uploadsDirection' to ten, który ustawiłem sobie 
+
+
+                $task->setAttach($fileName); //przypisuje załącznik do zadania
+            } 
+            
+            /*
+            powyżej można dodać: else {
+                //$nullAttach = null;
+                //$task->setAttach($nullAttach);
+                
+                $task->setAttach(null);
+            }
+            ale nie trzeba, bez tego i tak wstawia NULL do bazy danych w przypadku gdy nie dodaje załącznika do zadania
+             */
 
 
             $em->persist($task);

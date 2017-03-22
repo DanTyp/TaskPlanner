@@ -21,7 +21,7 @@ class TaskRepository extends EntityRepository {
 
     public function getTasksForToday($id) {
         $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT t FROM TaskPlannerBundle:Task t WHERE t.user = :id AND t.deadline = CURRENT_DATE()');
+        $query = $em->createQuery('SELECT t FROM TaskPlannerBundle:Task t WHERE t.user = :id AND t.deadline = CURRENT_DATE() AND t.status = 0');
         $query->setParameter('id', $id);
         return $query->getResult();
     }
@@ -29,14 +29,14 @@ class TaskRepository extends EntityRepository {
 
     public function getDelayedTasks() {
         $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT t FROM TaskPlannerBundle:Task t WHERE t.deadline < CURRENT_DATE()');
+        $query = $em->createQuery('SELECT t FROM TaskPlannerBundle:Task t WHERE t.deadline < CURRENT_DATE() AND t.status = 0');
         //$query->setParameter('id', $id);
         return $query->getResult();
     }
     
     public function getDelayedTasksForConcreteUser($id) {
         $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT t FROM TaskPlannerBundle:Task t WHERE t.user = :id AND t.deadline < CURRENT_DATE()');
+        $query = $em->createQuery('SELECT t FROM TaskPlannerBundle:Task t WHERE t.user = :id AND t.deadline < CURRENT_DATE() AND t.status = 0');
         $query->setParameter('id', $id);
         return $query->getResult();
     }
